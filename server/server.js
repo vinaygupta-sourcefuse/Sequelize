@@ -10,6 +10,13 @@ const Author = require("./models/Author");
 const Category = require("./models/Category");
 
 
+// const db = require("./models");
+
+// // Test the database connection
+// db.sequelize.authenticate()
+//   .then(() => console.log("Database connected ✅"))
+//   .catch((err) => console.error("Database connection error ❌:", err));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());

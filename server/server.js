@@ -51,31 +51,78 @@ app.get("/api/books", async (req, res) => {
 
 
 // POST: Insert a new record
+// app.post("/api/books", async (req, res) => {
+//     try {
+//         const { author, title, isbn, price, pubDate, genre } = req.body;
+
+//         // Check if author exists, else create it
+//         let [authorRecord] = await Author.findOrCreate({ where: { author } });
+
+//         // Check if category exists, else create it
+//         let [categoryRecord] = await Category.findOrCreate({ where: { genre } });
+
+//         // Create a new book
+//         const book = await Book.create({
+//             title,
+//             isbn,
+//             price,
+//             pubDate,
+//             author_id: authorRecord.author_id,
+//             category_id: categoryRecord.category_id,
+//         });
+
+//         res.status(201).json(book);
+//     } catch (err) {
+//         res.status(500).json({ error: err.message });
+//     }
+// });
+
+// If the author or genre already exists, it reuses existing records. 
+// If anything fails midway, no partial data is saved (rollback).
+// for that we are using transaction
 app.post("/api/books", async (req, res) => {
+    
+    const { author, title, isbn, price, pubDate, genre } = req.body;
+    const transaction = await Book.sequelize.transaction(); // Start a transaction
+
     try {
-        const { author, title, isbn, price, pubDate, genre } = req.body;
+        // Check if author already exists
+        let authorRecord = await Author.findOne({ where: { author }, transaction });
 
-        // Check if author exists, else create it
-        let [authorRecord] = await Author.findOrCreate({ where: { author } });
+        // If author does not exist, create a new one
+        if (!authorRecord) {
+            authorRecord = await Author.create({ author }, { transaction });
+        }
 
-        // Check if category exists, else create it
-        let [categoryRecord] = await Category.findOrCreate({ where: { genre } });
+        // Check if category (genre) exists
+        let categoryRecord = await Category.findOne({ where: { genre }, transaction });
 
-        // Create a new book
-        const book = await Book.create({
-            title,
-            isbn,
-            price,
-            pubDate,
-            author_id: authorRecord.author_id,
-            category_id: categoryRecord.category_id,
-        });
+        // If category does not exist, create it
+        if (!categoryRecord) {
+            categoryRecord = await Category.create({ genre }, { transaction });
+        }
 
-        res.status(201).json(book);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
+        // Insert the book with the correct author_id and category_id
+        const book = await Book.create(
+            {
+                title,
+                isbn,
+                price,
+                pubDate,
+                author_id: authorRecord.author_id,
+                category_id: categoryRecord.category_id,
+            },
+            { transaction }
+        );
+
+        await transaction.commit(); // Commit the transaction if everything is successful
+        res.status(201).json({ message: "Book added successfully", book });
+    } catch (error) {
+        await transaction.rollback(); // Rollback if any error occurs
+        res.status(500).json({ error: error.message });
     }
 });
+
 
 
 // DELETE: Remove a record by ID

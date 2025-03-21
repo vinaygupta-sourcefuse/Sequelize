@@ -70,3 +70,9 @@ select * from Book;
 select * from Book as b, Author as a where b.author_id = a.author_id;	
 select * from Book as b, Category as c where c.category_id = b.category_id;
 select * from Author as a, Category as c, Book as b where  a.author_id = b.author_id and c.category_id = b.category_id;
+
+
+---------------------
+for deleting node_modules from git cache :- 
+
+git rm -r --cached node_modules

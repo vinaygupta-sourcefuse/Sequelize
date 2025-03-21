@@ -1,0 +1,29 @@
+<div>
+  <table class="w-full border-collapse border border-gray-300">
+    
+    <tbody class="text-gray-600">
+      <tr class="hover:bg-green-50 transition">
+        <td class="border px-4 py-2 truncate max-w-40">{{ book.title  }}</td>
+        <td class="border px-4 py-2 truncate max-w-40">{{ book.author  }}</td>
+        <td class="border px-4 py-2 ">{{ book.isbn }}</td>
+        <td class="border px-4 py-2 ">{{ book.price }}</td>
+        <td class="border px-4 py-2 ">{{ book.pubDate | date:'yyyy-MM-dd' }}</td>
+        <td class="border px-4 py-2 truncate max-w-40">{{ book.genre  }}</td>
+        <td class="border px-4 py-2 text-center">
+          <button
+          class="px-3 py-1 border border-green-500 text-green-500 rounded-md hover:bg-green-500 hover:text-white transition"
+            (click)="editBookClicked()"
+          >
+          ✏️ Edit
+          </button>
+          <button
+          class="px-3 py-1 border border-red-500 text-red-500 rounded-md hover:bg-red-500 hover:text-white transition ml-2"
+            (click)="deleteBookClicked()"
+          >
+          ❌ Delete
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

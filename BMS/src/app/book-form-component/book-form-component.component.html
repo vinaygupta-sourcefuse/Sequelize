@@ -1,0 +1,67 @@
+<!-- Open Modal Button -->
+<button type="button" class="bg-green-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-green-600"
+  (click)="toggleModal()">Add Book</button>
+
+<!-- Modal -->
+<div class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden" id="exampleModal">
+  <div class="bg-white p-6 rounded-md shadow-lg w-96">
+    
+    <!-- Modal Header -->
+    <div class="flex justify-between items-center border-b pb-2 mb-4">
+      <h5 class="text-xl font-semibold">Enter Book Information</h5>
+      <button type="button" class="text-gray-500 hover:text-gray-700" (click)="toggleModal()">✖</button>
+    </div>
+
+    <!-- Modal Content -->
+    <form [formGroup]="bookForm">
+      <div>
+        <label for="title" class="block text-sm font-medium text-gray-600">Book Title</label>
+        <input type="text" id="title" formControlName="title" placeholder="Enter book title" required class="w-full p-2 border rounded">
+      </div>
+
+      <div>
+        <label for="author" class="block text-sm font-medium text-gray-600">Author</label>
+        <input type="text" id="author" formControlName="author" placeholder="Enter author name" required class="w-full p-2 border rounded">
+      </div>
+
+      <div>
+        <label for="isbn" class="block text-sm font-medium text-gray-600">ISBN</label>
+        <input type="text" id="isbn" formControlName="isbn" placeholder="Enter ISBN number" required class="w-full p-2 border rounded" pattern="\d*">
+        <div *ngIf="bookForm.get('isbn')?.invalid && (bookForm.get('isbn')?.dirty || bookForm.get('isbn')?.touched)" class="text-red-500 text-sm">
+          ISBN must be a number.
+        </div>
+      </div>
+
+      <div>
+        <label for="price" class="block text-sm font-medium text-gray-600">Price</label>
+        <input type="text" id="price" formControlName="price" placeholder="Enter Price" required class="w-full p-2 border rounded" pattern="\d*">
+        <div *ngIf="bookForm.get('price')?.invalid && (bookForm.get('price')?.dirty || bookForm.get('price')?.touched)" class="text-red-500 text-sm">
+          Price must be a number.
+        </div>
+      </div>
+
+      <div>
+        <label for="pub_date" class="block text-sm font-medium text-gray-600">Publication Date</label>
+        <input type="date" id="pubDate" formControlName="pubDate" required class="w-full p-2 border rounded">
+      </div>
+
+      <div>
+        <label for="genre" class="block text-sm font-medium text-gray-600">Genre</label>
+        <select id="genre" formControlName="genre" required class="w-full p-2 border rounded">
+          <option value="">Select Genre</option>
+          <option value="fiction">Fiction</option>
+          <option value="non-fiction">Non-Fiction</option>
+          <option value="mystery">Mystery</option>
+          <option value="fantasy">Fantasy</option>
+          <option value="biography">Biography</option>
+        </select>
+      </div>
+    </form>
+
+    <!-- Modal Footer -->
+    <div class="mt-4 flex justify-end">
+      <button type="button" class="bg-blue-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-blue-600"
+        (click)="addBook(); toggleModal()">Insert</button>
+    </div>
+  </div>
+</div>
